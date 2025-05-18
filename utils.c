@@ -3,7 +3,7 @@
 int strLen(char* src) {
 
     int contador = 0;
-    while (src[contador] != '/0'){
+    while (src[contador] != '\0'){
         contador ++;
     }
 
@@ -14,11 +14,11 @@ char* strDup(char* src) {
 
     char* dup = (char*) malloc( sizeof(char) * (strLen(src) + 1));
     int i = 0;
-    while(src[i] != '/0'){
+    while(src[i] != '\0'){
         dup[i] = src[i];
         i++;
     }
-    dup[i] = '/0';
+    dup[i] = '\0';
 
     return dup;
 }
@@ -68,36 +68,48 @@ void pathAddFirst(struct path* p, char* name, float latitude, float longitude) {
     newCity->latitude = latitude;
     newCity->longitude = longitude;
 
-    if(p->first->stop == 0){
-        p->first->stop = newCity;
-        p->first->next = 0;
-    } else{ //seguir!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!111
-        
+    struct node* newNode = (struct node*) malloc(sizeof(struct node));
+    newNode->stop = newCity;
+
+    if(p->first == 0){
+        p->first = newNode;
+        newNode->next = 0;
+        p->count = 1;
+        p->last = newNode;
+
+    } else{ 
+
+        float extraDistance = distance(p->first->stop, newCity);
+
+        newNode->next = p->first;
+        p->first = newNode;
+        p->count ++;
+        p->length = p->length + extraDistance;
     }
 }
 
 void pathAddLast(struct path* p, char* name, float latitude, float longitude) {
 
-    struct city* newCity = (struct city*) malloc(sizeof(struct city));
-    newCity->name = strDup(name);
-    newCity->latitude = latitude;
-    newCity->longitude = longitude;
+    if(p->first == 0){
+        pathAddFirst(p, name, latitude, longitude);
+    }else{
 
-    struct node* current = p->first;
-    while(current->next != 0){
-        current = current->next;
+        struct city* newCity = (struct city*) malloc(sizeof(struct city));
+        newCity->name = strDup(name);
+        newCity->latitude = latitude;
+        newCity->longitude = longitude;
+
+        float extraDistance = distance(p->last->stop, newCity);
+
+        struct node* newNode = (struct node*) malloc(sizeof(struct node));
+        newNode->stop = newCity;
+        newNode->next = 0;
+
+        p->last->next = newNode;
+        p->last = newNode;
+        p->length = p->length + extraDistance;
+        p->count = p->count + 1;
     }
-
-    current->next->stop = newCity;
-    current->next = &(newCity);
-    current->next->next = 0;
-}
-
-struct path* pathDuplicate(struct path* p) {
-
-    //COMPLETAR
-
-    return 0;
 }
 
 void pathSwapStops(struct path* p, char* name1, char* name2) {
