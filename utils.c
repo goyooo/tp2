@@ -12,7 +12,7 @@ int strLen(char* src) {
 
 char* strDup(char* src) {
 
-    char* dup = (char*) malloc( sizeof(int)* strLen(src));
+    char* dup = (char*) malloc( sizeof(char) * (strLen(src) + 1));
     int i = 0;
     while(src[i] != '/0'){
         dup[i] = src[i];
@@ -158,13 +158,3 @@ struct path* applyHeuristic(struct path* p) {
     return 0;
     
 }
-
-
-
-
-
-
-
-
-
-
