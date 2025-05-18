@@ -24,12 +24,32 @@ char* strDup(char* src) {
 }
 
 int strCmp(char* a, char* b) {
+    // Verificar bien para len distintos.
 
-    // COMPLETAR
-
+    int size1 = strLen(a);
+    int size2 = strLen(b);
+    int min = size1;
+   
+    if(size2 < min) min = size2;
+//min se define como el tamanio del str mas corto incluyendo el 0 
+   	   
+    int i=0;
+    while(i < min){
+    	if(a[i] == b[i]){
+    		i++;
+    	//mira si las letras en ambos str son iguales, si lo son suma 1 a i y vuelve a comparar hasta que no lo sean; si esto no pasa los str son iguales y retorna 0.
+    		}		
+    	else{
+    	// solo entra si los str NO son iguales. Si el caracter en a es menor(en valor ascii que es equivalente a su orden lexicografico) retorna 1, si es ayo retorna -1. 
+    		if(a[i] < b[i]){
+    			return 1;
+    		}else{
+                return -1;
+            }
+    	}
+    }	
     return 0;
 }
-
 
 struct path* pathNew() {
 
