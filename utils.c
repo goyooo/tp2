@@ -31,7 +31,7 @@ int strCmp(char* a, char* b) {
     int min = size1;
    
     if(size2 < min) min = size2;
-//min se define como el tamanio del str mas corto incluyendo el 0 
+//min se define como el tamanio del str mas corto
    	   
     int i=0;
     while(i < min){
