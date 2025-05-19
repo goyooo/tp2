@@ -12,13 +12,20 @@ int main() {
 
     // strLen
     int len = strLen("hola");
-    printf("strDup(\"hola\") -> \"%i\"\n", len);
+    printf("strLen(\"hola\") -> \"%i\"\n", len);
     printf("\n");
 
     // strDup
     char* dup = strDup("hola");
     printf("strDup(\"hola\") -> \"%s\"\n", dup);
     free(dup);
+    printf("\n");
+
+    // strCmp
+    char* a = "manuel";
+    char* b = "manu";
+    int cmp = strCmp(a,b);
+    printf("strComp(\"manuel, manu\") -> \"%i\"\n", cmp);
     printf("\n");
 
     // pathNew
@@ -33,18 +40,19 @@ int main() {
     pathAddLast(p, "Tokio", 35.689, 139.692);
 
     // pathPrint
-    pathPrint(p);
+    //pathPrint(p);
 
     // pathDuplicate
     struct path* np = pathDuplicate(p);
+    pathPrint(np);
 
     // pathSwapStops
-    pathSwapStops(p, "Buenos Aires", "Tokio");
-    pathPrint(p);
+    pathSwapStops(np, "Buenos Aires", "Tokio");
+    pathPrint(np);
 
     // pathRemoveCity
-    pathRemoveCity(p, "Paris");
-    pathPrint(p);
+    //pathRemoveCity(p, "Paris");
+    //pathPrint(p);
 
     // pathDelete
     pathDelete(p);
