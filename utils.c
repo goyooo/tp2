@@ -141,7 +141,7 @@ struct path* pathDuplicate(struct path* p){
     //podre cambiar la guarda para que itere hasta el final con el count o algo de eso?
     aux->next = 0;
     p->last = aux;
-    return p;
+    return newPath;
 }
 
 void pathSwapStops(struct path* p, char* name1, char* name2) {
