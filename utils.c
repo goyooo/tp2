@@ -1,5 +1,6 @@
 #include "utils.h"
 
+
 int strLen(char* src) {
 
     int contador = 0;
@@ -49,6 +50,7 @@ int strCmp(char* a, char* b) {
     }	
     return 0;
 }
+
 
 struct path* pathNew() {
 
@@ -113,89 +115,99 @@ void pathAddLast(struct path* p, char* name, float latitude, float longitude) {
 }
 
 struct path* pathDuplicate(struct path* p){
-    //esta no tengo la mas reputa idea que hacer, ma;ana veo.
-    //no estoy seguro si estoy cumpliendo la parte del enunciado que dice:
-    // "El resultado no puede compartir ning´un puntero con la estructura original." Como me aseguro?
     struct path* newPath = pathNew();
+
+    if(p->first == 0){
+        return newPath;
+    }
+
+    struct node* ogNode = p->first;
+    struct node* prev = 0;
+    
+    while(ogNode != 0){
+        struct city* newCity = (struct city*) malloc(sizeof(struct city));
+        newCity->name = strDup(ogNode->stop->name);
+        newCity->latitude = ogNode->stop->latitude;
+        newCity->longitude = ogNode->stop->longitude;
+        
+        struct node* newNode = (struct node*) malloc(sizeof(struct node));
+        newNode->stop = newCity;
+        newNode->next = 0;
+        
+        if(newPath->first == 0){
+            newPath->first = newNode;
+        }else{
+            prev->next = newNode;
+        }
+        prev = newNode;
+
+        if(ogNode->next == 0){
+            newPath->last = newNode;
+        }
+        ogNode = ogNode->next;
+    }
     newPath->count = p->count;
     newPath->length = p->length;
-
-    struct node* aux = p->first->next;
-    struct node* prev = p->first;
-    
-    newPath->first = prev;
-    for(int i=0; i < p->count; i++){
-        struct node* newNode = (struct node*) malloc(sizeof(struct node));
-        struct city* newCity = (struct city*) malloc(sizeof(struct city));
-        newCity->name = strDup(prev->stop->name);
-        newCity = prev->stop;
-
-        newNode->stop = newCity;
-        newNode->next = aux;
-        
-        prev = aux;
-        aux = aux->next;
-    }
-    //creo que me falta un nodo?? no estoy seguro. Lo tengo que hacer a mano?
-    //podre cambiar la guarda para que itere hasta el final con el count o algo de eso?
-    aux->next = 0;
-    p->last = aux;
     return newPath;
 }
 
 void pathSwapStops(struct path* p, char* name1, char* name2) {
     //asumo que siempre las ciudades a swapear son dadas en orden, o sea que si se quiere swapear la primer
     //parada, esta tiene que estar en name1. Analogamente, la ultima parada siempre esta en name2.
-    if(name1 == name2){return;}
-    struct node* aux1 = findNodeCity(p->first, name1);
-    struct node* aux2 = findNodeCity(p->first, name2);
+    if(strCmp(name1, name2) == 0){return;}
+    struct node* node1 = findNodeCity(p->first, name1);
+    struct node* node2 = findNodeCity(p->first, name2);
+    
+    if(!node1 || !node2){return;}
+    
+    struct node* prev1 = 0;
+    struct node* prev2 = 0;
 
-    //tengo que agarrar dos y swappearlos, como en el parcial la concha de su madre !!
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //fijarme como se modifica el length del path (ma;ana) (hecho)
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //como dijo jack, vamos por partes: hay que cambiar el primero con algun x  (hecho)
-    //                                                  el primero con el ulimo (hecho)
-    //                                                  el ultimo con algun x   (hecho)
-    //                                                  algun x con algun x     (hecho)
-    if(aux1 == p->first && aux2 == p->last){
-        aux2->next = aux1->next;
-        p->first = aux2;
-        p->last = aux1;
-        aux1->next = 0;
+    struct node* temp = p->first;
+    while (temp && temp->next != node1) {
+        temp = temp->next;
+        prev1 = temp;
     }
-    if(aux1 == p->first && aux2 != p->last){
-        struct node* temp = aux1;
-        aux1->next = aux2->next;
-        aux2->next = temp->next;
-        p->first = aux2;    
+    temp = p->first;
+    while (temp && temp->next != node2) {
+        temp = temp->next;
+        prev2 = temp;
     }
-    if(aux1 != p->first && aux2 == p->last){
-        struct node* anterior = p->first;
-        while(anterior->next != aux1){
-            anterior = anterior->next;
-        }
-        anterior->next = aux2;
-        aux2->next = aux1->next;
-        aux1->next = 0;
-        p->last = aux1;
-    }
-    if(aux1 != p->first && aux2 != p->last){
-        struct node* anterior1 = p->first;
-        while(anterior1->next != aux1){
-            anterior1 = anterior1->next;
-        }
-        struct node* anterior2 = p->first;
-        while(anterior2->next != aux2){
-            anterior2 = anterior2->next;
-        }
 
-        struct node* temp = aux1->next;
-        anterior1->next = aux2;
-        aux2->next = aux1->next;
-        anterior2->next = aux1;
-        aux2->next = temp;
+    //si son adyacentes (1,2)
+    if(node1->next == node2){
+        node1->next = node2->next;
+        if (prev1 != NULL) {
+            prev1->next = node2;
+        } else {
+            p->first = node2;
+        }
+    node2->next = node1;
     }
+    //si son adyacentes (2,1)
+    else if(node2->next == node1){
+        node2->next = node1->next;
+        if (prev2 != NULL) {
+            prev2->next = node1;
+        } else {
+            p->first = node1;
+        }
+    node1->next = node2;
+    }
+    else{
+        if(prev1){ prev1->next = node2;}
+        else{p->first = node2;}
+
+        if(prev2){prev2->next = node1;}
+        else{p->first = node1;}
+
+        struct node* temp = node1->next;
+        node1->next = node2->next;
+        node2->next = temp;
+    }
+    if(node1->next == 0){p->last = node1;}
+    if(node2->next == 0){p->last = node2;}
+
     p->length = calculateLength(p->first);
 }
 
@@ -203,19 +215,24 @@ void pathRemoveCity(struct path* p, char* name) {
 
     struct node* aux = findNodeCity(p->first, name);
     //tres casos: si es la primera, al diome o la cola del burro.
+
     //caso borde: si es la unica parada
-    if(p->first->next == 0){
+    if(p->first == p->last){
         free(aux->stop->name);
-        free(aux->stop);        
+        free(aux->stop);
+        free(aux);
+        p->first = 0;
+        p->last = 0;        
     }
     //si es la primera:
-    if(aux == p->first){
+     else if(aux == p->first){
         p->first = p->first->next;
         free(aux->stop->name);
         free(aux->stop);
+        free(aux);
     }
     //si es la ultima:
-    if(aux == p->last){
+    else if(aux == p->last){
         struct node* anteUltimo = p->first;
         while(anteUltimo->next->next != 0){
             anteUltimo = anteUltimo->next;
@@ -223,59 +240,39 @@ void pathRemoveCity(struct path* p, char* name) {
         p->last = anteUltimo;
         free(aux->stop->name);
         free(aux->stop);
+        free(aux);
     }
     //si esta al diome:
     else{
         struct node* anterior = p->first;
-        while(anterior->next->stop->name != name){
+        while(strCmp(anterior->next->stop->name, name) != 0){
             anterior = anterior->next;
         }
         anterior->next = aux->next;
         free(aux->stop->name);
         free(aux->stop);
+        free(aux);
     }
     //modifico el count y el length
     p->count = p->count - 1;
     p->length = calculateLength(p->first);
 }
 
-void pathDelete(struct path* p) { //Me trabe en la iteracion, no se como solucionarlo. Ma;ana el chat me iluminara
-    //caso borde p==NULL
-    //caso borde p->first == NULL
-    //caso borde p->first->next == NULL
+void pathDelete(struct path* p) {
+    if (p == NULL) return;
 
-    if(p == 0){
-        free(p); //no se si esta bien, o si solo deberia hacer un return;
+    struct node* current = p->first;
+    while (current != NULL) {
+        struct node* next = current->next;
+
+        free(current->stop->name);
+        free(current->stop);
+        free(current);
+
+        current = next;
     }
-    if(p->first == 0){
-        free(p->first);
-        free(p->last);
-        free(p);
-    }                               //chequear todos los casos bases jatejode toy muerto
-    if(p->first->next == 0){
-        free(p->first->stop->name);
-        free(p->first);
-        free(p->last);
-        free(p);
-    }
-    else{
-        //hay que borrar todos lo nombres, despues los nodos y ultimo el path
-        struct node* cur = p->first->next;
-        struct node* prev = p->first;
-        while(cur != p->last){ //borrar *last a mano al final    
-            pathRemoveCity(p, prev->stop->name);
-            free(prev); //esta linea y la anterior es borrar dos veces lo mismo?? no se
-            prev = cur;
-            cur= cur->next;
-        }
-        //libero el ultimo
-        free(cur->stop->name);
-        free(cur->stop);
-        //libero los punteros y el path
-        free(p->first);
-        free(p->last);
-        free(p);
-    }
+
+    free(p);
 }
 
 void pathPrint(struct path* p) {
@@ -296,15 +293,17 @@ void pathPrint(struct path* p) {
 
 float calculateLength(struct node* n) {
 
-    float distancia;
+    float distancia = 0.0;
+    //si no hay paradas o hay una sola la distancia es 0
     if(n == 0 || n->next == 0){
         return 0.0;
     }
     else{
+        //recorro la lista calculando la distancia entre cada parada y la siguiente
         struct node* current = n->next;
         struct node* prev = n;
-        while(current->next != 0){
-            distancia = distancia + distance(current->stop, prev->stop);
+        while(current != 0){
+            distancia += distance(current->stop, prev->stop);
             prev = current;
             current = current->next;
         }
@@ -315,11 +314,14 @@ float calculateLength(struct node* n) {
 struct node* findNodeCity(struct node* n, char* name) {
 
     struct node* current = n;
-    while(current->stop->name != name){
+    while(current != 0){
+        if(strCmp(current->stop->name, name) == 0){
+            return current;
+        }
         current = current->next;
     }
 
-    return current;
+    return NULL;
 }
 
 float distance(struct city* c1, struct city* c2) {
