@@ -4,12 +4,6 @@
 
 int main() {
 
-    // COMPLETAR
-
-    // A Continuacion dejamos algunos ejemplos de como
-    // llamar a las funciones pedidas. Este codigo debe
-    // ser borrado / modificado.
-
     // strLen
     int len1 = strLen("");
     printf("strLen(\"nada\") -> \"%i\"\n", len1);
@@ -62,9 +56,10 @@ int main() {
 
     char* a4 = "manuel";
     char* b4 = "manu";
-    int cmp4 = strCmp(a4,b4);
-    int cmp4 = strCmp(b4,a4);
-    printf("strComp(\"manuel, juanmanuel\") -> \"%i\"\n", cmp4);
+    int cmp41 = strCmp(a4,b4);
+    int cmp42 = strCmp(b4,a4);
+    printf("strComp(\"manuel, juanmanuel\") -> \"%i\"\n", cmp41);
+    printf("strComp(\"manuel, juanmanuel\") -> \"%i\"\n", cmp42);
     printf("\n");
 
     // pathNew
@@ -73,37 +68,56 @@ int main() {
     struct path* dupp = pathNew();
 
     // pathAddFirst
+    //añadir un nodo a un path vacío
     pathAddFirst(addf, "Paris", 48.857, 2.352);
-    pathAddFirst(addf, "Obera", 27.486, 55.12);
+    //añadir un nodo a un path con una única parada
+    pathAddFirst(addf, "Oberá", 27.486, 55.12);
+    //añadir un nodo a un path con más de una parada
     pathAddFirst(addf, "Rauch", -36.774, -59.089);
 
     // pathAddLast
+    //añadir un nodo a una path vacío
     pathAddLast(addl, "Rauch", -36.774, -59.089);
+    //añadir un nodo a un path con una única parada
     pathAddLast(addl, "Moose", 46.655, -11.0717);
+    //añadir un nodo a un path con más de una parada
     pathAddLast(addl, "Ombada", 15.680, 32.316);
     
     // pathDuplicate
+    //duplicar un path vacío
     struct path* np = pathDuplicate(dupp);
     pathPrint(np);
     printf("\n");
+    //duplicar un path con una unica parada
     pathAddFirst(dupp, "Rauch", -36.774, -59.089);
     struct path* np1 = pathDuplicae(dupp);
     pathPrint(np);
     printf("\n");
+    //duplicar un path con má de una parada
     pathAddLast(dupp, "Togusken", 48.371, 69.994);
     struct path* np2 = pathDuplicate(dupp);
     pathPrint(np);
     printf("\n");
 
-    //pathPrint(np);
 
     // pathSwapStops
-    pathSwapStops(np, "Buenos Aires", "Rauch");
-    pathPrint(np);
+    struct path* swapswap = pathNew();
+    pathAddFirst(swapswap, "Venado Tuerto", -33.746, -61.960);
+    pathAddFirst(swapswap, "Monte Buey", -32.918, -62.461);
 
-    // pathRemoveCity
-    //pathRemoveCity(p, "Paris");
-    //pathPrint(p);
+    //Swap de ciudades con mismo nombre
+    pathSwapStops(swapswap, "Venado Tuerto", "Venado Tuerto");
+    pathPrint(swapswap);
+    //Swap de dos ciudades en un path con solo dos ciudades
+    pathSwapStops(swapswap, "Venado Tuerto", "Monte Buey");
+    pathPrint(swapswap);
+    //Swap de dos ciudades tal que sean la primera y la ultima del camino
+    pathAddLast(swapswap, "Oberá", 27.486, 55.12);
+    pathAddLast(swapswap, "Rauch", -36.774, -59.089);
+    pathSwapStops(swapswap, "Venado Tuerto", "Rauch");
+    pathPrint(swapswap);
+
+    
 
     // pathDelete
     pathDelete(addf);
