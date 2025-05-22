@@ -152,8 +152,7 @@ struct path* pathDuplicate(struct path* p){
 }
 
 void pathSwapStops(struct path* p, char* name1, char* name2) {
-    //asumo que siempre las ciudades a swapear son dadas en orden, o sea que si se quiere swapear la primer
-    //parada, esta tiene que estar en name1. Analogamente, la ultima parada siempre esta en name2.
+
     if(strCmp(name1, name2) == 0){return;}
     struct node* node1 = findNodeCity(p->first, name1);
     struct node* node2 = findNodeCity(p->first, name2);
