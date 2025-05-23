@@ -88,7 +88,7 @@ int main() {
     printf("\n");
     //duplicar un path con una unica parada
     pathAddFirst(dupp, "Rauch", -36.774, -59.089);
-    struct path* np1 = pathDuplicae(dupp);
+    struct path* np1 = pathDuplicate(dupp);
     pathPrint(np);
     printf("\n");
     //duplicar un path con má de una parada
