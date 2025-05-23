@@ -81,12 +81,10 @@ void pathAddFirst(struct path* p, char* name, float latitude, float longitude) {
 
     } else{ 
 
-        float extraDistance = distance(p->first->stop, newCity);
-
         newNode->next = p->first;
         p->first = newNode;
         p->count ++;
-        p->length = p->length + extraDistance;
+        p->length = calculateLength(p->first);
     }
 }
 
@@ -101,15 +99,13 @@ void pathAddLast(struct path* p, char* name, float latitude, float longitude) {
         newCity->latitude = latitude;
         newCity->longitude = longitude;
 
-        float extraDistance = distance(p->last->stop, newCity);
-
         struct node* newNode = (struct node*) malloc(sizeof(struct node));
         newNode->stop = newCity;
         newNode->next = 0;
 
         p->last->next = newNode;
         p->last = newNode;
-        p->length = p->length + extraDistance;
+        p->length = calculateLength(p->first);
         p->count = p->count + 1;
     }
 }
@@ -152,7 +148,6 @@ struct path* pathDuplicate(struct path* p){
 }
 
 void pathSwapStops(struct path* p, char* name1, char* name2) {
-
     if(strCmp(name1, name2) == 0){return;}
     struct node* node1 = findNodeCity(p->first, name1);
     struct node* node2 = findNodeCity(p->first, name2);
@@ -213,6 +208,7 @@ void pathSwapStops(struct path* p, char* name1, char* name2) {
 void pathRemoveCity(struct path* p, char* name) {
 
     struct node* aux = findNodeCity(p->first, name);
+    if(!aux){return;}
     //tres casos: si es la primera, al diome o la cola del burro.
 
     //caso borde: si es la unica parada
@@ -224,7 +220,7 @@ void pathRemoveCity(struct path* p, char* name) {
         p->last = 0;        
     }
     //si es la primera:
-     else if(aux == p->first){
+    else if(aux == p->first){
         p->first = p->first->next;
         free(aux->stop->name);
         free(aux->stop);
@@ -236,6 +232,7 @@ void pathRemoveCity(struct path* p, char* name) {
         while(anteUltimo->next->next != 0){
             anteUltimo = anteUltimo->next;
         }
+        anteUltimo->next = 0;
         p->last = anteUltimo;
         free(aux->stop->name);
         free(aux->stop);
