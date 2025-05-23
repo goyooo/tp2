@@ -55,11 +55,11 @@ int main() {
     printf("\n");
 
     char* a4 = "manuel";
-    char* b4 = "manu";
+    char* b4 = "juanmanuel";
     int cmp41 = strCmp(a4,b4);
     int cmp42 = strCmp(b4,a4);
     printf("strComp(\"manuel, juanmanuel\") -> \"%i\"\n", cmp41);
-    printf("strComp(\"manuel, juanmanuel\") -> \"%i\"\n", cmp42);
+    printf("strComp(\"juanmanuel, manuel\") -> \"%i\"\n", cmp42);
     printf("\n");
     
     // pathAddFirst
@@ -89,12 +89,12 @@ int main() {
     //duplicar un path con una unica parada
     pathAddFirst(dupp, "Rauch", -36.774, -59.089);
     struct path* np1 = pathDuplicate(dupp);
-    pathPrint(np);
+    pathPrint(np1);
     printf("\n");
     //duplicar un path con má de una parada
     pathAddLast(dupp, "Togusken", 48.371, 69.994);
     struct path* np2 = pathDuplicate(dupp);
-    pathPrint(np);
+    pathPrint(np2);
     printf("\n");
 
 
@@ -131,9 +131,9 @@ int main() {
     pathPrint(rem);
     printf("\n");
 
+    pathAddFirst(rem,"Palmas", -10.259, -48.328);
     //Borrar la última ciuada de un camino de cuatro ciudades
-    pathAddLast(rem,"Lieja", 50.639, 5.595);
-    pathRemoveCity(rem, "Lieja");
+    pathRemoveCity(rem, "Emmerlood");
     pathPrint(rem);
     printf("\n");
 
@@ -145,7 +145,7 @@ int main() {
 
     //preparo el path rem para que tenga una sola ciudad:
     pathRemoveCity(rem, "Bergamo");
-    pathRemoveCity(rem, "Emmerlood");
+    pathRemoveCity(rem, "Palmas");
     //queda solo Bielefeld
     pathRemoveCity(rem, "Bielefeld");
     pathPrint(rem);
