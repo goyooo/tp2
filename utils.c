@@ -350,8 +350,68 @@ float distance(struct city* c1, struct city* c2) {
 
 struct path* applyHeuristic(struct path* p) {
 
-    // COMPLETAR
+    if (p->count <= 1) return pathDuplicate(p);
 
+    struct path* ej4 = pathDuplicate(p);
+    int cambios = 1;
+    while(cambios){
+        cambios = 0;
+        struct node* cur = ej4->first;
+
+        while(cur != 0 && cur->next != 0){
+            struct city* c1 = cur->stop;
+            struct city* c2 = cur->next->stop;
+
+            struct node* siguiente = cur->next;
+
+            float oldLength = ej4->length;
+            pathSwapStops(ej4, c1->name, c2->name);
+
+            if(ej4->length < oldLength){
+                cambios = 1;
+                cur = siguiente;
+
+            }else{
+                pathSwapStops(ej4, c1->name, c2->name);
+                cur = cur->next;
+            }
+        }
+
+    }
+    
+    return ej4;
+}
+
+
+    /*
+    //creo un vector para meter los nodos 
+    int t = p->count;
+    struct node* paradas[t];
+
+    struct node* auxd = p->first->next;
+    for(int i=0; i<t; i++){
+        float d1 = distance(auxd->stop, auxd->next->stop);
+
+        for(int j=0; !(auxd->next->next); j++){
+            float d2 = distance(auxd->stop, auxd->next->next->stop);
+            if(d2>d1){
+                paradas[j] = auxd->next->next;
+            }else{
+                paradas[j] = auxd->next;
+            }
+        }
+        auxd = auxd->next;
+
+    }
+    int u = 0;
+    struct path* newpath = pathNew();
+    newpath->count = t;
+    while(u < t){
+        pathAddLast(newpath, paradas[u]->stop->name, paradas[u]->stop->latitude, paradas[u]->stop->longitude);
+        u++;
+    }
+    newpath->length = calculateLength(newpath->first);
     return 0;
     
 }
+*/
