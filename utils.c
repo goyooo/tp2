@@ -158,13 +158,20 @@ void pathSwapStops(struct path* p, char* name1, char* name2) {
     struct node* prev2 = 0;
 
     struct node* temp = p->first;
-    while (temp && temp->next != node1) {
+    
+    temp = p->first;
+    while (temp != NULL && temp->next != NULL && temp->next != node1) {
         temp = temp->next;
+    }
+    if (temp && temp->next == node1) {
         prev1 = temp;
     }
+
     temp = p->first;
-    while (temp && temp->next != node2) {
+    while (temp != NULL && temp->next != NULL && temp->next != node2) {
         temp = temp->next;
+    }
+    if (temp && temp->next == node2) {
         prev2 = temp;
     }
 
@@ -369,7 +376,7 @@ struct path* applyHeuristic(struct path* p) {
 
             if(ej4->length < oldLength){
                 cambios = 1;
-                cur = siguiente;
+                 cur = siguiente;
 
             }else{
                 pathSwapStops(ej4, c1->name, c2->name);
@@ -381,37 +388,3 @@ struct path* applyHeuristic(struct path* p) {
     
     return ej4;
 }
-
-
-    /*
-    //creo un vector para meter los nodos 
-    int t = p->count;
-    struct node* paradas[t];
-
-    struct node* auxd = p->first->next;
-    for(int i=0; i<t; i++){
-        float d1 = distance(auxd->stop, auxd->next->stop);
-
-        for(int j=0; !(auxd->next->next); j++){
-            float d2 = distance(auxd->stop, auxd->next->next->stop);
-            if(d2>d1){
-                paradas[j] = auxd->next->next;
-            }else{
-                paradas[j] = auxd->next;
-            }
-        }
-        auxd = auxd->next;
-
-    }
-    int u = 0;
-    struct path* newpath = pathNew();
-    newpath->count = t;
-    while(u < t){
-        pathAddLast(newpath, paradas[u]->stop->name, paradas[u]->stop->latitude, paradas[u]->stop->longitude);
-        u++;
-    }
-    newpath->length = calculateLength(newpath->first);
-    return 0;
-    
-}
-*/
