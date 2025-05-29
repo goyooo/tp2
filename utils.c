@@ -363,7 +363,7 @@ struct path* applyHeuristic(struct path* p) {
     int cambios = 1;
     while(cambios){
         cambios = 0;
-        struct node* cur = ej4->first;
+        struct node* cur = ej4->first->next;
 
         while(cur != 0 && cur->next != 0){
             struct city* c1 = cur->stop;
@@ -376,7 +376,7 @@ struct path* applyHeuristic(struct path* p) {
 
             if(ej4->length < oldLength){
                 cambios = 1;
-                 cur = siguiente;
+                cur = siguiente;
 
             }else{
                 pathSwapStops(ej4, c1->name, c2->name);
@@ -388,3 +388,4 @@ struct path* applyHeuristic(struct path* p) {
     
     return ej4;
 }
+
