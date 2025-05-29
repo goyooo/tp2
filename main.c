@@ -192,5 +192,33 @@ int main() {
     pathDelete(swapswap);
     pathDelete(rem);
 
+    //heuristica
+
+    struct path* heu = pathNew();
+    pathAddFirst(heu, "Monte Buey", -32.918, -62.461);
+    pathAddFirst(heu, "Venado Tuerto", -33.746, -61.960);
+    pathAddFirst(heu, "Mojon grande", -27.713, -55.156);
+    pathAddFirst(heu, "Fingringhoe", 51.844, 0.944);
+    pathAddFirst(heu, "Mburucuya", -28.047, -58.224);
+    pathAddFirst(heu, "Matelandia", -25.238, -53.980);
+    pathAddFirst(heu, "Negro muerto", -39.783, -65.266);
+    pathAddFirst(heu, "Torta Quemada", -25.308, -54.636);
+
+
+
+
+    heu->length = calculateLength(heu->first);
+    heu->count = 8;
+    printf("applyheuristics \n");
+    pathPrint(heu);
+    printf("\n");
+
+    printf("applied heuristic \n");
+    struct path* heuristiqueado = applyHeuristic(heu);
+    pathPrint(heuristiqueado);
+    printf("\n");
+
+
+
     return 0;
 }
